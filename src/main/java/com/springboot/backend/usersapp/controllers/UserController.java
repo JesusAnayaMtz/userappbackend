@@ -2,16 +2,16 @@ package com.springboot.backend.usersapp.controllers;
 
 import com.springboot.backend.usersapp.entities.User;
 import com.springboot.backend.usersapp.services.UserServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -36,12 +36,19 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<User> create(@RequestBody User user){
+    public ResponseEntity<?> create(@Valid @RequestBody User user, BindingResult result){
+        ///validamos los campos y regresamos el mensaje con el error
+        ResponseEntity<Map<String, String>> errors = Validation(result);
+        if (errors != null) return errors;
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user){
+    public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id ){
+        ///validamos los campos y regresamos el mensaje con el error
+        ResponseEntity<Map<String, String>> errors = Validation(result);
+        if (errors != null) return errors;
+
         Optional<User> userEncontrado = userService.finddById(id);
         if (userEncontrado.isPresent()){
             User userBd = userEncontrado.get();
@@ -58,6 +65,7 @@ public class UserController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         Optional<User> usuarioEncontrado = userService.finddById(id);
@@ -67,5 +75,16 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario A Eliminar No Se Encontro");
         }
+    }
+
+    private static ResponseEntity<Map<String, String>> Validation(BindingResult result) {
+        if (result.hasErrors()){
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(error -> {
+                errors.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errors);
+        }
+        return null;
     }
 }
