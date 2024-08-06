@@ -4,6 +4,9 @@ import com.springboot.backend.usersapp.entities.User;
 import com.springboot.backend.usersapp.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -22,6 +25,14 @@ public class UserController {
     @GetMapping()
     public List<User> findAll(){
         return userService.findAll();
+    }
+
+    @GetMapping("/page/{page}")
+    public Page<User> findAllPageable(@PathVariable Integer page){
+        //definimos una variable del tipo Pageable y definimos nuestras reglas de paginacion con pagerequest y el primer parametro es el numero de pagina y el segundo es cuantos elementos mostrara nuestra pagina
+        Pageable pageable = PageRequest.of(page, 5);
+        //le pasamos por parametro el pageable al finafll
+        return userService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
