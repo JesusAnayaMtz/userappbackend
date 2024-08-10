@@ -48,7 +48,7 @@ public class User {
     private String password;
 
     @JsonIgnoreProperties({"handler", "hibernateLazyinitializer"})
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             //tabla que establece la relacion
             name = "users_roles",
