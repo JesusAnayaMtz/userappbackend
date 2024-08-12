@@ -14,6 +14,10 @@ public class SpringSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authz ->
             authz.requestMatchers(HttpMethod.GET, "/api/users", "/api/users/page/{page}").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/users").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/users/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "api/users/{id}").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole("ADMIN", "USER")
                     .anyRequest().authenticated()
         ).csrf(config -> config.disable())  //se desabilita el csrf ya que esto se maneja por el lado de angular
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //y el sesion managment se maneja sin estado con stateless
