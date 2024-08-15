@@ -12,6 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     //metodo para devolver una paginacion de usuarios
     Page<User> findAll(Pageable pageable);
 
-    Optional<User> findByUserName(String name);
+    Optional<User> findByUsername(String name);
 
 }

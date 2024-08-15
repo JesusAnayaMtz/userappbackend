@@ -45,7 +45,7 @@ public class jwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //creamos un usuario se poblan con los datos del request
             User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
             //asignamos los valores que vienen del user
-            username= user.getUserName();
+            username= user.getUsername();
             password = user.getPassword();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -93,8 +93,15 @@ public class jwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(200);
     }
 
+    //metodo cuando falla la autenticacion o el inicio de sesion
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "Error en la autenticacion username o/y password incorrecto!");
+        body.put("error", failed.getMessage());
 
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+        response.setContentType(CONTENT_TYPE);
+        response.setStatus(401);
     }
 }

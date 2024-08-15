@@ -26,7 +26,7 @@ public class User {
     @NotBlank
     private String name;
 
-    @NotEmpty
+    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
@@ -40,7 +40,7 @@ public class User {
     @NotBlank
     @Size(min = 3, max = 12)
     @Column(name = "user_name", unique = true)
-    private String userName;
+    private String username;
 
     @NotEmpty
     @NotBlank

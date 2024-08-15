@@ -66,7 +66,7 @@ public class UserController {
             userBd.setName(user.getName());
             userBd.setLastName(user.getLastName());
             userBd.setEmail(user.getEmail());
-            userBd.setUserName(user.getUserName());
+            userBd.setUsername(user.getUsername());
             userBd.setPassword(user.getPassword());
 
             return  ResponseEntity.status(HttpStatus.OK).body(userService.save(userBd));

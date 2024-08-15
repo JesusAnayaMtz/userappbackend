@@ -2,6 +2,7 @@ package com.springboot.backend.usersapp.services;
 
 import com.springboot.backend.usersapp.entities.User;
 import com.springboot.backend.usersapp.repositories.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +28,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //primero vamos a buscar al usuario que viene del usuario registrado
-        Optional<User> optionalUser = userRepository.findByUserName(username);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
         //validamos que no este vacio, si esta vacio manda una exception
         if (optionalUser.isEmpty()){
             throw new UsernameNotFoundException(String.format("UserName %s no existe en el sistema", username));
