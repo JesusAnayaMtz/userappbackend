@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id){
-        Optional<User> userFind = userService.finddById(id);
+        Optional<User> userFind = userService.findById(id);
         if (userFind.isPresent()){
             return ResponseEntity.status(HttpStatus.OK).body(userFind.orElseThrow());
         } else{
@@ -60,16 +60,9 @@ public class UserController {
         ResponseEntity<Map<String, String>> errors = Validation(result);
         if (errors != null) return errors;
 
-        Optional<User> userEncontrado = userService.finddById(id);
+        Optional<User> userEncontrado = userService.update(user, id);
         if (userEncontrado.isPresent()){
-            User userBd = userEncontrado.get();
-            userBd.setName(user.getName());
-            userBd.setLastName(user.getLastName());
-            userBd.setEmail(user.getEmail());
-            userBd.setUsername(user.getUsername());
-            userBd.setPassword(user.getPassword());
-
-            return  ResponseEntity.status(HttpStatus.OK).body(userService.save(userBd));
+            return  ResponseEntity.status(HttpStatus.OK).body(userService.save(userEncontrado.get()));
         }
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -79,7 +72,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
-        Optional<User> usuarioEncontrado = userService.finddById(id);
+        Optional<User> usuarioEncontrado = userService.findById(id);
         if (usuarioEncontrado.isPresent()){
             userService.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).body("Usuario Eliminado Correctamente");

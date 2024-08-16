@@ -13,11 +13,13 @@ public interface UserService {
 
     Page<User> findAll(Pageable pageable);
 
-    Optional<User> finddById(Long id);
+    Optional<User> findById(Long id);
 
     User save(User user);
 
     void deleteById(Long id);
+
+    Optional<User> update(User user, Long id);
 
 
 

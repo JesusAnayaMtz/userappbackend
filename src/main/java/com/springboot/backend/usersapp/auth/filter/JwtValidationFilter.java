@@ -1,6 +1,7 @@
 package com.springboot.backend.usersapp.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.backend.usersapp.auth.SimpleGrantedAuthorityJsonCreator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -49,10 +50,13 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             Object authoritiesClaims = claims.get("authorities");
 
             //convtertimos a una coleccion  una lista de grantedautorithies
-            Collection<? extends GrantedAuthority> roles = Arrays.asList(new ObjectMapper().readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
+            Collection<? extends GrantedAuthority> roles = Arrays.asList(new ObjectMapper()
+                    //mezclamos el contructor de la segunda clase con el de la priemra que es la original del simplegrantedauthroties
+                            .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                    .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
 
             //nos autenticamos pasando el username y roles
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, roles);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,null, roles);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             //continuamos con la autenticaciomn
             chain.doFilter(request, response);

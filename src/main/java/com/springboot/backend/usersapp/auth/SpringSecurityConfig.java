@@ -1,5 +1,6 @@
 package com.springboot.backend.usersapp.auth;
 
+import com.springboot.backend.usersapp.auth.filter.JwtValidationFilter;
 import com.springboot.backend.usersapp.auth.filter.jwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,7 @@ public class SpringSecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole("ADMIN", "USER")
                     .anyRequest().authenticated())
                 .addFilter(new jwtAuthenticationFilter(authenticationManager())) //agregamos el filtro creado para la authenticacion
+                .addFilter(new JwtValidationFilter(authenticationManager())) //agregamos el filtro creado para la validacion
                 .csrf(config -> config.disable())  //se desabilita el csrf ya que esto se maneja por el lado de angular
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //y el sesion managment se maneja sin estado con stateless
                 .build();

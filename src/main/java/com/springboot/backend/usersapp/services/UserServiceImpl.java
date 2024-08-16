@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> finddById(Long id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
 
     }
@@ -44,7 +44,29 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
+    public Optional<User> update(User user, Long id) {
+
+        Optional<User> userEncontrado = userRepository.findById(id);
+        if (userEncontrado.isPresent()) {
+            User userBd = userEncontrado.get();
+            userBd.setName(user.getName());
+            userBd.setLastName(user.getLastName());
+            userBd.setEmail(user.getEmail());
+            userBd.setUsername(user.getUsername());
+            userBd.setPassword(user.getPassword());
+
+            //guardamos si existe
+            userRepository.save(userBd);
+            return Optional.of(userBd);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+
+
 }
