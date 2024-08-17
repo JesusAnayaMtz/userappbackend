@@ -1,6 +1,7 @@
 package com.springboot.backend.usersapp.controllers;
 
 import com.springboot.backend.usersapp.entities.User;
+import com.springboot.backend.usersapp.models.UserRequest;
 import com.springboot.backend.usersapp.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id ){
+    public ResponseEntity<?> update(@Valid @RequestBody UserRequest user, BindingResult result, @PathVariable Long id ){
         ///validamos los campos y regresamos el mensaje con el error
         ResponseEntity<Map<String, String>> errors = Validation(result);
         if (errors != null) return errors;

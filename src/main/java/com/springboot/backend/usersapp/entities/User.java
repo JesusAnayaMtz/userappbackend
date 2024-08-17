@@ -1,6 +1,7 @@
 package com.springboot.backend.usersapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,6 +42,10 @@ public class User {
     @Size(min = 3, max = 12)
     @Column(name = "user_name", unique = true)
     private String username;
+
+    @Transient  //significa que este campo no es mapeado en la tabla solos se maneja a nivel de clase
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  //esto es para que se pueda poblar en el json cuando se crea en la clase entiti o user request
+    private Boolean admin;
 
     @NotEmpty
     @NotBlank
