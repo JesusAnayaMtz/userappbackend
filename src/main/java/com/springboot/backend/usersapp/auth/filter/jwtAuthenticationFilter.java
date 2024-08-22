@@ -66,8 +66,11 @@ public class jwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         //obtenemos los roles devuelve un tipo collection
        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
 
+       //se usa para pasar a los claims validamos si es admin con stream y equals
+       Boolean isAdmin = roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
        //agregamos los roles como claims y se reescriben a tipo json con objectmapper para agregarlos en el jwt
-        Claims claims = Jwts.claims().add("authorities", new ObjectMapper().writeValueAsString(roles)).add("username", username).build();
+        Claims claims = Jwts.claims().add("authorities", new ObjectMapper().writeValueAsString(roles)).add("username", username).add("isAdmin", isAdmin).build();
 
         //firmamos el token con la llave secreta que viene de tokenJwtCOnfig que es la secretkey, le asignamos la fecha de creacion y la de expiracion en milisegundos
         String jwt = Jwts.builder().subject(username).claims(claims).signWith(SECRET_KEY).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 3600000))

@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserRequest {
+public class UserRequest implements IUser{
 
     @NotEmpty
     @NotBlank
@@ -33,4 +33,12 @@ public class UserRequest {
     private String username;
 
     private Boolean admin;
+
+    public Boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
 }
